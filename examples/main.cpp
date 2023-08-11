@@ -10,6 +10,10 @@ int main (int argc, char *argv[]) {
   bst.insert(6);
   bst.insert(64);
   bst.insert(50);
-  std::cout << bst.treeString(bst.search(23)) << std::endl;
+  bst.insert(13);
+  bst.insert(2);
+  bst.insert(7);
+  int tmp1, tmp2;
+  std::cout << bst.treeString(bst.search(23), tmp1, tmp2) << std::endl;
   return 0;
 }

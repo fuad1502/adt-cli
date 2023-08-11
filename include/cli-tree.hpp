@@ -19,7 +19,7 @@ public:
   std::shared_ptr<Tree<T>> search(const T& data);
   void insert(const T& data);
   void remove(std::shared_ptr<Tree<T>> p);
-  std::string treeString(std::shared_ptr<Tree<T>> p);
+  std::string treeString(std::shared_ptr<Tree<T>> p, int& nSlashesLeftParent, int& nSlashesRightParent);
   template<typename U>
   friend std::ostream& operator<<(std::ostream& os, const BST<U>& bst);
 private:
@@ -68,52 +68,100 @@ std::shared_ptr<Tree<T>> BST<T>::search(const T& data) {
 }
 
 int columns(const std::string& s);
-std::string concatenateLines(const std::string& data, const std::string& left, const std::string& right);
 
 template<typename T>
-std::string BST<T>::treeString(std::shared_ptr<Tree<T>> tree)
+std::string BST<T>::treeString(std::shared_ptr<Tree<T>> tree, int& nSlashesLeftParent, int& nSlashesRightParent)
 {
   if(tree == nullptr) {
+    nSlashesLeftParent = 0;
+    nSlashesRightParent = 0;
     return "";
   } else {
     std::string dataString = std::to_string(tree->data);
     if(dataString.length() == 1) {
       dataString = ' ' + dataString + ' ';
     }
+    int unused;
     // Left branch
-    std::string leftString = treeString(tree->left);
-    int leftStringColumns = columns(leftString);
+    int nSlashesLeft;
+    std::string leftString = treeString(tree->left, nSlashesLeft, unused);
+    int leftColumns = columns(leftString);
     // Right branch
-    std::string rightString = treeString(tree->right);
-    int rightStringColumns = columns(rightString);
-    // Calculate length of tree trunk
-    int childColumn = std::max(leftStringColumns, rightStringColumns);
-    int nSlashes = childColumn / 2;
-    std::string s;
+    int nSlashesRight;
+    std::string rightString = treeString(tree->right, unused, nSlashesRight);
+    int rightColumns = columns(rightString);
     // Print tree root node
-    s += std::string(childColumn, ' ');
+    std::string s;
+    s += std::string(leftColumns, ' ');
     s += dataString;
-    s += std::string(childColumn, ' ');
+    s += std::string(rightColumns, ' ');
     s += '\n';
     // Print tree trunk
-    for(int i = 0; i < nSlashes; i++) {
-      s += std::string(childColumn - i - 1, ' ');
-      if(leftString.length() != 0)
+    std::stringstream leftStream(leftString);
+    std::stringstream rightStream(rightString);
+    for(int i = 0; i < std::max(nSlashesLeft, nSlashesRight); i++) {
+      if(i < nSlashesLeft) {
+        // print trunk
+        s += std::string(leftColumns - i - 1, ' ');
         s += '/';
-      else 
-        s += ' ';
-      s += std::string(i, ' ');
+        s += std::string(i, ' ');
+      } else {
+        // print branch
+        std::string line;
+        std::getline(leftStream, line);
+        if(line.length() != 0) {
+          s += line;
+        } else {
+          s += std::string(leftColumns, ' ');
+        }
+      }
+      // print root node gap
       s += std::string(dataString.length(), ' ');
-      s += std::string(i, ' ');
-      if(rightString.length() != 0)
+      if(i < nSlashesRight) {
+        // print trunk
+        s += std::string(i, ' ');
         s += '\\';
-      else 
-        s += ' ';
-      s += std::string(childColumn - i - 1, ' ');
+        s += std::string(rightColumns - i - 1, ' ');
+      } else {
+        // print branch
+        std::string line;
+        std::getline(rightStream, line);
+        if(line.length() != 0) {
+          s += line;
+        } else {
+          s += std::string(rightColumns, ' ');
+        }
+      }
+      // print new line
       s += '\n';
     }
-    // Print concatenation of left and right tree
-    s += concatenateLines(dataString, leftString, rightString);
+    // print remaining branches
+    std::string leftLine, rightLine;
+    std::getline(leftStream, leftLine);
+    std::getline(rightStream, rightLine);
+    while(leftLine.length() != 0 || rightLine.length() != 0) {
+      // left side
+      if(leftLine.length() == 0) {
+        s += std::string(leftColumns, ' ');
+      } else {
+        s += leftLine;
+      }
+      // root node gap
+      s += std::string(dataString.length(), ' ');
+      // right side
+      if(rightLine.length() == 0) {
+        s += std::string(rightColumns, ' ');
+      } else {
+        s += rightLine;
+      }
+      // new line
+      s += '\n';
+      std::getline(leftStream, leftLine);
+      std::getline(rightStream, rightLine);
+    }
+    // Calculate required number of slashes to parent
+    nSlashesLeftParent = dataString.length() / 2 + rightColumns;
+    nSlashesRightParent = dataString.length() / 2 + leftColumns;
     return s;
   }
 }

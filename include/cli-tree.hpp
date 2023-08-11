@@ -106,9 +106,13 @@ std::string BST<T>::treeString(std::shared_ptr<Tree<T>> tree, int& nSlashesLeftP
     s += std::string(rightColumns, ' ');
     s += '\n';
 
+    std::string leftLine, rightLine;
     std::stringstream leftStream(leftString);
     std::stringstream rightStream(rightString);
-    for(int i = 0; i < std::max(nSlashesLeft, nSlashesRight); i++) {
+    std::getline(leftStream, leftLine);
+    std::getline(rightStream, rightLine);
+    int i = 0; // number of printed lines
+    while(leftLine.length() != 0 || rightLine.length() != 0) {
       if(i < nSlashesLeft) {
         // print connecting lines
         s += std::string(leftColumns - i - 1, ' ');
@@ -116,13 +120,12 @@ std::string BST<T>::treeString(std::shared_ptr<Tree<T>> tree, int& nSlashesLeftP
         s += std::string(i, ' ');
       } else {
         // print left tree
-        std::string line;
-        std::getline(leftStream, line);
-        if(line.length() != 0) {
-          s += line;
+        if(leftLine.length() != 0) {
+          s += leftLine;
         } else {
           s += std::string(leftColumns, ' ');
         }
+        std::getline(leftStream, leftLine);
       }
       // print root node gap
       s += std::string(dataString.length(), ' ');
@@ -133,40 +136,16 @@ std::string BST<T>::treeString(std::shared_ptr<Tree<T>> tree, int& nSlashesLeftP
         s += std::string(rightColumns - i - 1, ' ');
       } else {
         // print right tree
-        std::string line;
-        std::getline(rightStream, line);
-        if(line.length() != 0) {
-          s += line;
+        if(rightLine.length() != 0) {
+          s += rightLine;
         } else {
           s += std::string(rightColumns, ' ');
         }
+        std::getline(rightStream, rightLine);
       }
       // print new line
       s += '\n';
-    }
-    // print what's left of left and right tree
-    std::string leftLine, rightLine;
-    std::getline(leftStream, leftLine);
-    std::getline(rightStream, rightLine);
-    while(leftLine.length() != 0 || rightLine.length() != 0) {
-      // left tree
-      if(leftLine.length() == 0) {
-        s += std::string(leftColumns, ' ');
-      } else {
-        s += leftLine;
-      }
-      // root node gap
-      s += std::string(dataString.length(), ' ');
-      // right tree
-      if(rightLine.length() == 0) {
-        s += std::string(rightColumns, ' ');
-      } else {
-        s += rightLine;
-      }
-      // new line
-      s += '\n';
-      std::getline(leftStream, leftLine);
-      std::getline(rightStream, rightLine);
+      i += 1;
     }
     // Report required number of slashes to parent
     nSlashesLeftParent = dataString.length() / 2 + rightColumns;

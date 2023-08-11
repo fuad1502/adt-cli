@@ -87,17 +87,24 @@ std::string BST<T>::treeString(std::shared_ptr<Tree<T>> tree, int& nSlashesLeftP
   } else {
     // Root node
     std::string dataString = std::to_string(tree->data);
-    if(dataString.length() == 1) {
-      dataString = ' ' + dataString + ' ';
-    }
-    int unused;
     // Left tree
+    int unused;
     int nSlashesLeft;
     std::string leftString = treeString(tree->left, nSlashesLeft, unused);
+    if(leftString.length() == 2) {
+      // Special case for single character leaf node
+      leftString = std::string(1, leftString[0]) + " \n";
+      nSlashesLeft = 1;
+    }
     int leftColumns = columns(leftString);
     // Right tree
     int nSlashesRight;
     std::string rightString = treeString(tree->right, unused, nSlashesRight);
+    if(rightString.length() == 2) {
+      // Special case for single character leaf node
+      rightString = " " + std::string(1, rightString[0]) + "\n";
+      nSlashesRight = 1;
+    }
     int rightColumns = columns(rightString);
     // Print tree root node
     std::string s;
@@ -105,7 +112,7 @@ std::string BST<T>::treeString(std::shared_ptr<Tree<T>> tree, int& nSlashesLeftP
     s += dataString;
     s += std::string(rightColumns, ' ');
     s += '\n';
-
+    // Print left and right tree
     std::string leftLine, rightLine;
     std::stringstream leftStream(leftString);
     std::stringstream rightStream(rightString);

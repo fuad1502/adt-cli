@@ -18,12 +18,12 @@ class BST {
 public:
   std::shared_ptr<Tree<T>> search(const T& data);
   void insert(const T& data);
-  void remove(std::shared_ptr<Tree<T>> p);
+  void remove(std::shared_ptr<Tree<T>> tree);
   template<typename U>
   friend std::ostream& operator<<(std::ostream& os, const BST<U>& bst);
 private:
   std::shared_ptr<Tree<T>> head;
-  static std::string treeString(std::shared_ptr<Tree<T>> p, int& nSlashesLeftParent, int& nSlashesRightParent);
+  static std::string treeString(std::shared_ptr<Tree<T>> tree, int& nSlashesLeftParent, int& nSlashesRightParent);
 };
 
 template<typename T>
@@ -67,6 +67,14 @@ std::shared_ptr<Tree<T>> BST<T>::search(const T& data) {
   return tree;
 }
 
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const BST<T>& bst)
+{ 
+  int unused1, unused2;
+  os << BST<T>::treeString(bst.head, unused1, unused2);
+  return os;
+}
+
 int columns(const std::string& s);
 
 template<typename T>
@@ -77,16 +85,17 @@ std::string BST<T>::treeString(std::shared_ptr<Tree<T>> tree, int& nSlashesLeftP
     nSlashesRightParent = 0;
     return "";
   } else {
+    // Root node
     std::string dataString = std::to_string(tree->data);
     if(dataString.length() == 1) {
       dataString = ' ' + dataString + ' ';
     }
     int unused;
-    // Left branch
+    // Left tree
     int nSlashesLeft;
     std::string leftString = treeString(tree->left, nSlashesLeft, unused);
     int leftColumns = columns(leftString);
-    // Right branch
+    // Right tree
     int nSlashesRight;
     std::string rightString = treeString(tree->right, unused, nSlashesRight);
     int rightColumns = columns(rightString);
@@ -96,17 +105,17 @@ std::string BST<T>::treeString(std::shared_ptr<Tree<T>> tree, int& nSlashesLeftP
     s += dataString;
     s += std::string(rightColumns, ' ');
     s += '\n';
-    // Print tree trunk
+
     std::stringstream leftStream(leftString);
     std::stringstream rightStream(rightString);
     for(int i = 0; i < std::max(nSlashesLeft, nSlashesRight); i++) {
       if(i < nSlashesLeft) {
-        // print trunk
+        // print connecting lines
         s += std::string(leftColumns - i - 1, ' ');
         s += '/';
         s += std::string(i, ' ');
       } else {
-        // print branch
+        // print left tree
         std::string line;
         std::getline(leftStream, line);
         if(line.length() != 0) {
@@ -118,12 +127,12 @@ std::string BST<T>::treeString(std::shared_ptr<Tree<T>> tree, int& nSlashesLeftP
       // print root node gap
       s += std::string(dataString.length(), ' ');
       if(i < nSlashesRight) {
-        // print trunk
+        // print connecting line
         s += std::string(i, ' ');
         s += '\\';
         s += std::string(rightColumns - i - 1, ' ');
       } else {
-        // print branch
+        // print right tree
         std::string line;
         std::getline(rightStream, line);
         if(line.length() != 0) {
@@ -135,12 +144,12 @@ std::string BST<T>::treeString(std::shared_ptr<Tree<T>> tree, int& nSlashesLeftP
       // print new line
       s += '\n';
     }
-    // print remaining branches
+    // print what's left of left and right tree
     std::string leftLine, rightLine;
     std::getline(leftStream, leftLine);
     std::getline(rightStream, rightLine);
     while(leftLine.length() != 0 || rightLine.length() != 0) {
-      // left side
+      // left tree
       if(leftLine.length() == 0) {
         s += std::string(leftColumns, ' ');
       } else {
@@ -148,7 +157,7 @@ std::string BST<T>::treeString(std::shared_ptr<Tree<T>> tree, int& nSlashesLeftP
       }
       // root node gap
       s += std::string(dataString.length(), ' ');
-      // right side
+      // right tree
       if(rightLine.length() == 0) {
         s += std::string(rightColumns, ' ');
       } else {
@@ -159,17 +168,9 @@ std::string BST<T>::treeString(std::shared_ptr<Tree<T>> tree, int& nSlashesLeftP
       std::getline(leftStream, leftLine);
       std::getline(rightStream, rightLine);
     }
-    // Calculate required number of slashes to parent
+    // Report required number of slashes to parent
     nSlashesLeftParent = dataString.length() / 2 + rightColumns;
     nSlashesRightParent = dataString.length() / 2 + leftColumns;
     return s;
   }
-}
-
-template<typename T>
-std::ostream& operator<<(std::ostream& os, const BST<T>& bst)
-{ 
-  int unused1, unused2;
-  os << BST<T>::treeString(bst.head, unused1, unused2);
-  return os;
 }

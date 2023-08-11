@@ -19,11 +19,11 @@ public:
   std::shared_ptr<Tree<T>> search(const T& data);
   void insert(const T& data);
   void remove(std::shared_ptr<Tree<T>> p);
-  std::string treeString(std::shared_ptr<Tree<T>> p, int& nSlashesLeftParent, int& nSlashesRightParent);
   template<typename U>
   friend std::ostream& operator<<(std::ostream& os, const BST<U>& bst);
 private:
   std::shared_ptr<Tree<T>> head;
+  static std::string treeString(std::shared_ptr<Tree<T>> p, int& nSlashesLeftParent, int& nSlashesRightParent);
 };
 
 template<typename T>
@@ -169,6 +169,7 @@ std::string BST<T>::treeString(std::shared_ptr<Tree<T>> tree, int& nSlashesLeftP
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const BST<T>& bst)
 { 
-  os << bst.treeString(bst.head);
+  int unused1, unused2;
+  os << BST<T>::treeString(bst.head, unused1, unused2);
   return os;
 }

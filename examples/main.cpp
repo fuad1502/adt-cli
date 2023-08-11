@@ -14,6 +14,6 @@ int main (int argc, char *argv[]) {
   bst.insert(2);
   bst.insert(7);
   int tmp1, tmp2;
-  std::cout << bst.treeString(bst.search(23), tmp1, tmp2) << std::endl;
+  std::cout << bst << std::endl;
   return 0;
 }

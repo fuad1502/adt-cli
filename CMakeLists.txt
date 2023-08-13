@@ -11,7 +11,9 @@ target_include_directories(cli-tree PRIVATE include)
 target_sources(cli-tree PRIVATE src/cli-tree.cpp)
 
 # Examples
-add_subdirectory(examples)
+if(CLI_ADT_BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif()
 
 if(CLI_ADT_ENABLE_TESTING)
   add_subdirectory(lib/googletest)

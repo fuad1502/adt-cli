@@ -19,6 +19,7 @@ public:
   std::shared_ptr<Tree<T>> search(const T& data);
   void insert(const T& data);
   void remove(std::shared_ptr<Tree<T>> tree);
+  std::string traverse();
   template<typename U>
   friend std::ostream& operator<<(std::ostream& os, const BST<U>& bst);
 private:
@@ -27,6 +28,7 @@ private:
   static std::shared_ptr<Tree<T>> searchInTree(const T& data, std::shared_ptr<Tree<T>> tree, std::shared_ptr<Tree<T>>& treeParent);
   static std::shared_ptr<Tree<T>> findMinimumInTree(std::shared_ptr<Tree<T>> tree, std::shared_ptr<Tree<T>>& minParent);
   static std::shared_ptr<Tree<T>> findMaximumInTree(std::shared_ptr<Tree<T>> tree, std::shared_ptr<Tree<T>>& maxParent);
+  static std::string traverseInTree(std::shared_ptr<Tree<T>> tree);
   void moveTreeChildUp(std::shared_ptr<Tree<T>> tree, std::shared_ptr<Tree<T>> treeChild, std::shared_ptr<Tree<T>> treeParent);
 };
 
@@ -98,6 +100,12 @@ void BST<T>::remove(std::shared_ptr<Tree<T>> tree)
 }
 
 template<typename T>
+std::string BST<T>::traverse()
+{
+  return traverseInTree(head);
+}
+
+template<typename T>
 std::ostream& operator<<(std::ostream& os, const BST<T>& bst)
 { 
   int unused1, unused2;
@@ -149,6 +157,20 @@ std::shared_ptr<Tree<T>> BST<T>::findMaximumInTree(std::shared_ptr<Tree<T>> tree
     tree = tree->right;
   }
   return tree;
+}
+
+template<typename T>
+std::string BST<T>::traverseInTree(std::shared_ptr<Tree<T>> tree)
+{
+  if(tree == nullptr) {
+    return "";
+  } else {
+    std::string s;
+    s = traverseInTree(tree->left);
+    s += std::to_string(tree->data) + " ";
+    s += traverseInTree(tree->right);
+    return s;
+  }
 }
 
 template<typename T>

@@ -15,5 +15,13 @@ int main (int argc, char *argv[]) {
   bst.insert(7);
   int tmp1, tmp2;
   std::cout << bst << std::endl;
+  bst.remove(bst.search(7));
+  std::cout << bst << std::endl;
+  bst.remove(bst.search(6));
+  std::cout << bst << std::endl;
+  bst.remove(bst.search(23));
+  std::cout << bst << std::endl;
+  bst.remove(bst.search(34));
+  std::cout << bst << std::endl;
   return 0;
 }

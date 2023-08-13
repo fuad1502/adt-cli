@@ -13,8 +13,9 @@ target_sources(cli-tree PRIVATE src/cli-tree.cpp)
 # Examples
 add_subdirectory(examples)
 
-# Testsuit
-add_subdirectory(lib/googletest)
-enable_testing()
-add_subdirectory(testsuits)
-add_test(NAME cli-tree-testsuit COMMAND cli-tree-testsuit)
+if(CLI_ADT_ENABLE_TESTING)
+  add_subdirectory(lib/googletest)
+  enable_testing()
+  add_subdirectory(testsuits)
+  add_test(NAME cli-tree-testsuit COMMAND cli-tree-testsuit)
+endif()

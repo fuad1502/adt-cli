@@ -28,5 +28,7 @@ int main (int argc, char *argv[]) {
   bst.remove(bst.search(34));
   std::cout << bst << std::endl;
   std::cout << bst.traverse() << std::endl;
+  BST<int> balanced = bst.balance();
+  std::cout << balanced << std::endl;
   return 0;
 }

@@ -2,25 +2,21 @@
 #include <memory>
 
 template<typename T>
-class Node {
-public:
-  template<typename Y>
-  friend class List;
-  template<typename Y>
-  friend class BST;
-private:
-  Node(const T& data) : data(data), next(nullptr), previous(nullptr) {};
+struct List {
   T data;
-  std::shared_ptr<Node> next;
-  std::shared_ptr<Node> previous;
+  std::shared_ptr<List> next;
+  std::shared_ptr<List> previous;
 };
 
 template<typename T>
-class List {
+using pList = std::shared_ptr<List<T>>;
+
+template<typename T>
+class DictList {
 public:
-  std::shared_ptr<Node<T>> search(const T& data);
+  std::shared_ptr<List<T>> search(const T& data);
   void insert(const T& data);
-  void remove(std::shared_ptr<Node<T>> node);
+  void remove(std::shared_ptr<List<T>> node);
 private:
-  std::shared_ptr<Node<T>> head;
+  std::shared_ptr<List<T>> head;
 };

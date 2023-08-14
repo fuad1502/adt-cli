@@ -10,4 +10,5 @@ TEST(CliTreeTestsuit, All) {
   tree.insert(0);
   EXPECT_NE(tree.search(0), nullptr);
   EXPECT_NE(tree.search(2), nullptr);
+  EXPECT_EQ(getNumberOfNodes(tree.data()), 3);
 }

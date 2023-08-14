@@ -140,7 +140,7 @@ int getNumberOfNodes(pTree<T> tree)
   if(tree == nullptr) {
     return 0;
   } else {
-    return 1 + getNumberOfNodes(tree->left) + getNumebrOfNodes(tree->right);
+    return 1 + getNumberOfNodes(tree->left) + getNumberOfNodes(tree->right);
   }
 }
 

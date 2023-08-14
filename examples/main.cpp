@@ -2,7 +2,7 @@
 #include <iostream>
 
 int main (int argc, char *argv[]) {
-  BST<int> bst;
+  DictTree<int> bst;
   bst.insert(23);
   bst.insert(12);
   bst.insert(34);
@@ -13,7 +13,6 @@ int main (int argc, char *argv[]) {
   bst.insert(13);
   bst.insert(2);
   bst.insert(7);
-  int tmp1, tmp2;
   std::cout << bst << std::endl;
   std::cout << bst.traverse() << std::endl;
   bst.remove(bst.search(7));
@@ -28,7 +27,5 @@ int main (int argc, char *argv[]) {
   bst.remove(bst.search(34));
   std::cout << bst << std::endl;
   std::cout << bst.traverse() << std::endl;
-  BST<int> balanced = bst.balance();
-  std::cout << balanced << std::endl;
   return 0;
 }
